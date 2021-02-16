@@ -5,7 +5,32 @@ module Fastlane
   module Actions
     class UpdateAndroidApplicationIdSuffixAction < Action
       def self.run(params)
-        UI.message("The update_android_application_id_suffix plugin is working!")
+        path = params[:path]
+        suffix = params[:suffix]
+
+        foundSuffix = false
+
+        data = File.read(path)
+        updated_data = data
+        data.each_line do |line|
+            if (line.start_with?("def APPLICATION_ID_SUFFIX"))
+              foundSuffix = true
+              updated_data = updated_data.gsub(line, "def APPLICATION_ID_SUFFIX=#{suffix}\r\n")
+            end
+        end
+
+        if (!foundSuffix)
+          UI.error "APPLICATION_ID_SUFFIX not found in build.gradle file, please ensure file contains 'def APPLICATION_ID_SUFFIX' declaration"
+          raise "Illegal Argument Exception : No APPLICATION_ID_SUFFIX variable in build.gradle file"
+        end
+
+        File.open(path, "w") do |f|
+          f.write(updated_data)
+        end
+
+        UI.message "Android application ID suffix updated to #{suffix}"
+        return true
+
       end
 
       def self.description
@@ -16,31 +41,28 @@ module Fastlane
         ["Shalon Teoh"]
       end
 
-      def self.return_value
-        # If your method provides a return value, you can describe here what it does
-      end
-
-      def self.details
-        # Optional:
-        ""
-      end
-
       def self.available_options
         [
-          # FastlaneCore::ConfigItem.new(key: :your_option,
-          #                         env_name: "UPDATE_ANDROID_APPLICATION_ID_SUFFIX_YOUR_OPTION",
-          #                      description: "A description of your option",
-          #                         optional: false,
-          #                             type: String)
+            FastlaneCore::ConfigItem.new(key: :path,
+                               description: "Path to your version.properties file",
+                               optional: false),
+            FastlaneCore::ConfigItem.new(key: :suffix,
+                              description: "Application ID suffix value to update",
+                              optional: false)
+       ]
+      end
+
+      def self.example_code
+        [
+            'update_android_application_id_suffix(
+                path: "/path/to/version.properties"
+                suffix: ".example_shop"
+            )'
         ]
       end
 
       def self.is_supported?(platform)
-        # Adjust this if your plugin only works for a particular platform (iOS vs. Android, for example)
-        # See: https://docs.fastlane.tools/advanced/#control-configuration-by-lane-and-by-platform
-        #
-        # [:ios, :mac, :android].include?(platform)
-        true
+        platform == :android
       end
     end
   end
