@@ -1,0 +1,17 @@
+buildscript {
+    repositories {}
+    dependencies {}
+}
+
+def APPLICATION_ID_SUFFIX=''
+
+android {
+    defaultConfig {
+        applicationId 'com.example'
+    }
+    productFlavors {
+        benova_shop {
+            applicationIdSuffix APPLICATION_ID_SUFFIX
+        }
+    }
+}
