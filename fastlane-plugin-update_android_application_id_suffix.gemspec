@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = 'shalon@veecotech.com'
 
   spec.summary       = 'Update android application id suffix'
-  # spec.homepage      = "https://github.com/<GITHUB_USERNAME>/fastlane-plugin-update_android_application_id_suffix"
+  spec.homepage      = "https://github.com/VeecotechShalon/fastlane-plugin-update_android_application_id_suffix"
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*"] + %w(README.md LICENSE)
