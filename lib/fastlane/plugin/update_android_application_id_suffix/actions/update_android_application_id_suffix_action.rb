@@ -15,7 +15,7 @@ module Fastlane
         data.each_line do |line|
             if (line.start_with?("def APPLICATION_ID_SUFFIX"))
               foundSuffix = true
-              updated_data = updated_data.gsub(line, "def APPLICATION_ID_SUFFIX=#{suffix}\r\n")
+              updated_data = updated_data.gsub(line, "def APPLICATION_ID_SUFFIX='#{suffix}'\r\n")
             end
         end
 
